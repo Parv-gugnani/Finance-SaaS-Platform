@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { UserButton } from "@clerk/nextjs";
 
 export default function Home() {
-  return <p>this is an authencitajend</p>;
+  return <div>Dashboard Page</div>;
 }
