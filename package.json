@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:generate": "drizzle-kit generate:pg --schema db/schema.ts --out ./drizzle",
-    "db:migrate": "",
-    "db:studio": ""
+    "db:generate": "drizzle-kit generate --dialect=postgresql --schema=db/schema.ts --out=./drizzle",
+    "db:migrate": "bun ./scripts/migrate.ts",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@clerk/backend": "^1.2.1",
@@ -20,7 +20,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "drizzle-orm": "^0.31.1",
+    "drizzle-orm": "^0.31.2",
     "hono": "^4.4.2",
     "lucide-react": "^0.379.0",
     "next": "14.2.3",
@@ -35,7 +35,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "dotenv": "^16.4.5",
-    "drizzle-kit": "^0.20.17",
+    "drizzle-kit": "^0.22.6",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8",
