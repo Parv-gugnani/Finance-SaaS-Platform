@@ -5,6 +5,7 @@ import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { HTTPException } from "hono/http-exception";
 import { eq } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
+import { createId } from "@paralleldrive/cuid2";
 
 const app = new Hono()
   .get("/", clerkMiddleware(), async (c) => {
@@ -36,12 +37,16 @@ const app = new Hono()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
-      const data = await db.insert(accounts).values({
-        id:
-        userId: auth.userId,
-        ...values,
-      });
-      return c.json({});
+      const [data] = await db
+        .insert(accounts)
+        .values({
+          id: createId(),
+          userId: auth.userId,
+          ...values,
+        })
+        .returning();
+
+      return c.json({ data });
     }
   );
 
