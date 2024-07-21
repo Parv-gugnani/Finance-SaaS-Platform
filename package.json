@@ -29,7 +29,7 @@
     "drizzle-zod": "^0.5.1",
     "hono": "^4.4.2",
     "lucide-react": "^0.379.0",
-    "next": "14.2.3",
+    "next": "^14.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.1",
@@ -38,7 +38,8 @@
     "tailwindcss-animate": "^1.0.7",
     "tslib": "^2.6.3",
     "zod": "^3.23.8",
-    "zod-validator": "^1.0.1"
+    "zod-validator": "^1.0.1",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@types/node": "^20",
