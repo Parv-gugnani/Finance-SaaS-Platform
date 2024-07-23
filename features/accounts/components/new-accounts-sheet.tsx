@@ -12,8 +12,7 @@ import { z } from "zod";
 import { useCreateAccount } from "../api/use-create-accounts";
 
 const formSchema = insertAccountSchema.pick({ name: true });
-
-type FormValues = z.input<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>;
 
 export const NewAccountSheet = () => {
   const { isOpen, onClose } = useNewAccount();
