@@ -38,6 +38,7 @@ import {
 import { Button } from "./ui/button";
 import React from "react";
 import { Trash } from "lucide-react";
+import { useConfirm } from "@/hooks/use-confirm";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -58,6 +59,11 @@ export function DataTable<TData, TValue>({
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
+  );
+
+  const [ConfirmationDialog, confirm] = useConfirm(
+    "Are you Sure?",
+    "You are about to perform a bulk delete"
   );
 
   const [rowSelection, setRowSelection] = React.useState({});
@@ -87,6 +93,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
+      <ConfirmDialog />
       {/* filter */}
       <div className="flex items-center py-4">
         <Input
@@ -103,6 +110,10 @@ export function DataTable<TData, TValue>({
             size="sm"
             variant="outline"
             className="ml-auto font-normal text-xs"
+            onClick={() => {
+              onDelete(table.getFilteredSelectedRowModel().rows);
+              table.resetRowSelection();
+            }}
           >
             <Trash className="size-4 mr-2" />
             Delete({table.getFilteredSelectedRowModel().rows.length})
