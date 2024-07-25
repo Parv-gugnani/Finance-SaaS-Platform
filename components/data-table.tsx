@@ -61,7 +61,7 @@ export function DataTable<TData, TValue>({
     []
   );
 
-  const [ConfirmationDialog, confirm] = useConfirm(
+  const [ConfirmDialog, confirm] = useConfirm(
     "Are you Sure?",
     "You are about to perform a bulk delete"
   );
@@ -110,9 +110,13 @@ export function DataTable<TData, TValue>({
             size="sm"
             variant="outline"
             className="ml-auto font-normal text-xs"
-            onClick={() => {
-              onDelete(table.getFilteredSelectedRowModel().rows);
-              table.resetRowSelection();
+            onClick={async () => {
+              const ok = await confirm();
+
+              if (ok) {
+                onDelete(table.getFilteredSelectedRowModel().rows);
+                table.resetRowSelection();
+              }
             }}
           >
             <Trash className="size-4 mr-2" />
