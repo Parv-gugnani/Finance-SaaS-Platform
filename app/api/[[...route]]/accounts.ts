@@ -1,4 +1,4 @@
-import { accounts, insertAccountSchema } from "@/db/schema";
+import { accounts, insertAccountsSchema } from "@/db/schema";
 import { Hono } from "hono";
 import { db } from "@/db/drizzle";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
@@ -26,10 +26,11 @@ const app = new Hono()
 
     return c.json({ data });
   })
+  .get()
   .post(
     "/",
     clerkMiddleware(),
-    zValidator("json", insertAccountSchema),
+    zValidator("json", insertAccountsSchema),
     async (c) => {
       const auth = getAuth(c);
       const values = c.req.valid("json");
@@ -38,15 +39,13 @@ const app = new Hono()
         return c.json({ error: "Unauthorized" }, 401);
       }
 
-      const [data] = await db
-        .insert(accounts)
-        .values({
-          id: createId(),
-          userId: auth.userId,
-          ...values,
+      const data = await db
+        .select({
+          id: accounts.id,
+          name: accounts.name,
         })
-        .returning();
-
+        .from(accounts)
+        .where(eq(accounts.userId, auth.userId));
       return c.json({ data });
     }
   )
