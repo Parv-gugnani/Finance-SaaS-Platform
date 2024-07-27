@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1719817110907,
-      "tag": "0000_keen_adam_warlock",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1719835467921,
-      "tag": "0001_legal_luke_cage",
+      "when": 1722066651262,
+      "tag": "0000_sparkling_firestar",
       "breakpoints": true
     }
   ]
