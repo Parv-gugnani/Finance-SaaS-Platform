@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { insertAccountsSchema } from "@/db/schema";
+import { insertAccountSchema } from "@/db/schema";
 
 import {
   Form,
@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const formSchema = insertAccountsSchema.pick({ name: true });
+const formSchema = insertAccountSchema.pick({ name: true });
 type FormValues = z.input<typeof formSchema>;
 
 type Props = {
