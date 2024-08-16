@@ -1,5 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
+
+import { useOpenAccount } from "@/features/accounts/hooks/use-open-account";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,16 +16,18 @@ type props = {
 };
 
 export const Actions = ({ id }: props) => {
+  const { onOpen } = useOpenAccount();
+
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="size-8 p-0">
-            <MoreHorizontal />
+            <MoreHorizontal className="size-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem disabled={false} onClick={() => {}}>
+          <DropdownMenuItem disabled={false} onClick={() => onOpen(id)}>
             <Edit className="size-4 mr-2" />
             Edit
           </DropdownMenuItem>
