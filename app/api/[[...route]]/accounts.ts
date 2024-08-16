@@ -1,4 +1,4 @@
-import { accounts, insertAccountsSchema } from "@/db/schema";
+import { accounts, insertAccountSchema } from "@/db/schema";
 import { Hono } from "hono";
 import { db } from "@/db/drizzle";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
@@ -62,7 +62,7 @@ const app = new Hono()
   .post(
     "/",
     clerkMiddleware(),
-    zValidator("json", insertAccountsSchema),
+    zValidator("json", insertAccountSchema),
     async (c) => {
       const auth = getAuth(c);
       const values = c.req.valid("json");
@@ -115,7 +115,7 @@ const app = new Hono()
     "/:id",
     clerkMiddleware(),
     zValidator("param", z.object({ id: z.string().optional() })),
-    zValidator("json", insertAccountsSchema.pick({ name: true })),
+    zValidator("json", insertAccountSchema.pick({ name: true })),
     async (c) => {
       const auth = getAuth(c);
       const { id } = c.req.valid("param");
@@ -134,6 +134,41 @@ const app = new Hono()
         .set(values)
         .where(and(eq(accounts.userId, auth.userId), eq(accounts.id, id)))
         .returning();
+      if (!data) {
+        return c.json({ error: "Not found" }, 404);
+      }
+
+      return c.json({ data });
+    }
+  )
+  .delete(
+    "/:id",
+    clerkMiddleware(),
+    zValidator(
+      "param",
+      z.object({
+        id: z.string().optional(),
+      })
+    ),
+    async (c) => {
+      const auth = getAuth(c);
+      const { id } = c.req.valid("param");
+
+      if (!id) {
+        return c.json({ error: "Missing id" }, 400);
+      }
+
+      if (!auth?.userId) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      const [data] = await db
+        .delete(accounts)
+        .where(and(eq(accounts.userId, auth.userId), eq(accounts.id, id)))
+        .returning({
+          id: accounts.id,
+        });
+
       if (!data) {
         return c.json({ error: "Not found" }, 404);
       }
