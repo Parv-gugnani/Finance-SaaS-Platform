@@ -1,6 +1,4 @@
-import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { Hono } from "hono";
-
 import { handle } from "hono/vercel";
 import accounts from "./accounts";
 
@@ -15,5 +13,4 @@ export const POST = handle(app);
 export const PATCH = handle(app);
 export const DELETE = handle(app);
 
-// c mean that content
 export type AppType = typeof routes;

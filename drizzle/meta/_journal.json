@@ -8,6 +8,13 @@
       "when": 1722066651262,
       "tag": "0000_sparkling_firestar",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1724140374152,
+      "tag": "0001_superb_captain_britain",
+      "breakpoints": true
     }
   ]
 }

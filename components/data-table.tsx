@@ -1,32 +1,21 @@
 "use client";
-
+import * as React from "react";
+import { Trash } from "lucide-react";
+import { useConfirm } from "@/hooks/use-confirm";
 import {
   ColumnDef,
-  flexRender,
-  //
-  getCoreRowModel,
-  getPaginationRowModel,
-  //
-  useReactTable,
-  //
   SortingState,
-  getSortedRowModel,
-  //
   ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
   getFilteredRowModel,
-  //
-  VisibilityState,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
   Row,
 } from "@tanstack/react-table";
-
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import {
   Table,
   TableBody,
@@ -35,10 +24,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "./ui/button";
-import React from "react";
-import { Trash } from "lucide-react";
-import { useConfirm } from "@/hooks/use-confirm";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -55,21 +40,15 @@ export function DataTable<TData, TValue>({
   onDelete,
   disabled,
 }: DataTableProps<TData, TValue>) {
+  const [ConfirmDialog, confirm] = useConfirm(
+    "Are u sure?",
+    "You are about to perform a bulk delete."
+  );
   const [sorting, setSorting] = React.useState<SortingState>([]);
-
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-
-  const [ConfirmDialog, confirm] = useConfirm(
-    "Are you Sure?",
-    "You are about to perform a bulk delete"
-  );
-
   const [rowSelection, setRowSelection] = React.useState({});
-
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
 
   const table = useReactTable({
     data,
@@ -80,13 +59,10 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
       rowSelection,
     },
   });
@@ -94,7 +70,6 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <ConfirmDialog />
-      {/* filter */}
       <div className="flex items-center py-4">
         <Input
           placeholder={`Filter ${filterKey}...`}
@@ -107,49 +82,22 @@ export function DataTable<TData, TValue>({
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
           <Button
             disabled={disabled}
-            size="sm"
-            variant="outline"
-            className="ml-auto font-normal text-xs"
             onClick={async () => {
               const ok = await confirm();
-
               if (ok) {
                 onDelete(table.getFilteredSelectedRowModel().rows);
                 table.resetRowSelection();
               }
             }}
+            size="sm"
+            variant="outline"
+            className="ml-auto font-normal text-xs"
           >
             <Trash className="size-4 mr-2" />
-            Delete({table.getFilteredSelectedRowModel().rows.length})
+            Delete ({table.getFilteredSelectedRowModel().rows.length})
           </Button>
         )}
       </div>
-      {/* dropdown ---- */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="ml-auto">
-            Columns
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {table
-            .getAllColumns()
-            .filter((column) => column.getCanHide())
-            .map((column) => {
-              return (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
-        </DropdownMenuContent>
-      </DropdownMenu>
-      {/* main */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -200,7 +148,6 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      {/*next anand previous*/}
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}

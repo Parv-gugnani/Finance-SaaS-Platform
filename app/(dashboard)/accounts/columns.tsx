@@ -1,11 +1,11 @@
 "use client";
-
-import { Button } from "@/components/ui/button";
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { InferResponseType } from "hono";
+import { ArrowUpDown } from "lucide-react";
+import { ColumnDef } from "@tanstack/react-table";
+
 import { client } from "@/lib/hono";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import { Actions } from "./actions";
 
 export type ResponseType = InferResponseType<
@@ -36,7 +36,6 @@ export const columns: ColumnDef<ResponseType>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-
   {
     accessorKey: "name",
     header: ({ column }) => {
