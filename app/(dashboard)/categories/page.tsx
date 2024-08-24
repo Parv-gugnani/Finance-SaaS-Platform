@@ -1,6 +1,6 @@
 const CategoriesPage = () => {
   return (
-    <div className="bg-red-400">
+    <div>
       <h1>Categories Page</h1>
     </div>
   );
