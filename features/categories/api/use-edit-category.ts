@@ -3,32 +3,33 @@ import { InferRequestType, InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/hono";
-import { categories } from "@/db/schema";
 
 type ResponseType = InferResponseType<
-  (typeof client.api.categories)["bulk-delete"]["$post"]
+  (typeof client.api.categories)[":id"]["$patch"]
 >;
-
 type RequestType = InferRequestType<
-  (typeof client.api.categories)["bulk-delete"]["$json"]
->;
+  (typeof client.api.categories)[":id"]["$patch"]
+>["json"];
 
-export const useBulkDeleteCategories = () => {
+export const useEditCategory = (id?: string) => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async (json) => {
-      const response = await client.api.categories["bulk-delete"]["$post"]({
+      const response = await client.api.categories[":id"]["$patch"]({
+        param: { id },
         json,
       });
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Category deleted");
+      toast.success("Category updated");
+      queryClient.invalidateQueries({ queryKey: ["category", { id }] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
+      //TODO: Invalidate sumary and transactions
     },
     onError: () => {
-      toast.error("Failed to Delete categories");
+      toast.error("Failed to edit category");
     },
   });
 
