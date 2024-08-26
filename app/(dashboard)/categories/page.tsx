@@ -9,11 +9,11 @@ import { column } from "./columns";
 import { DataTable } from "@/components/data-table";
 import { useGetCategories } from "@/features/categories/api/use-get-categories";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useBulkdDeleteCategories } from "@/features/categories/api/use-bulk-delete-categories";
+import { useBulkDeleteCategories } from "@/features/categories/api/use-bulk-delete-categories";
 
 const CategoriesPage = () => {
   const newCategory = useNewCategory();
-  const deleteCategories = useBulkdDeleteCategories();
+  const deleteCategories = useBulkDeleteCategories();
   const categoriesQuery = useGetCategories();
   const categories = categoriesQuery.data || [];
 
@@ -50,7 +50,7 @@ const CategoriesPage = () => {
         </CardHeader>
         <CardContent>
           <DataTable
-            columns={columns}
+            columns={column}
             data={categories}
             filterKey="name"
             onDelete={(row) => {

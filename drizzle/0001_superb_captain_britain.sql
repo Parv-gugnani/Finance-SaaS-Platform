@@ -1,1 +1,0 @@
-ALTER TABLE "accounts" RENAME COLUMN "plain_id" TO "plaid_id";

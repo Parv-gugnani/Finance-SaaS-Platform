@@ -1,12 +1,12 @@
 import { Hono } from "hono";
 import { db } from "@/db/drizzle";
-import { and, eq, inArray, relations } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
 import { zValidator } from "@hono/zod-validator";
 import { createId } from "@paralleldrive/cuid2";
 import { z } from "zod";
-import { categories, insertCategorySchema } from "@/db/schema";
 
+import { categories, insertCategorySchema } from "@/db/schema";
 const app = new Hono()
   .get("/", clerkMiddleware(), async (c) => {
     const auth = getAuth(c);
@@ -16,7 +16,10 @@ const app = new Hono()
     }
 
     const data = await db
-      .select({ id: categories.id, name: categories.name })
+      .select({
+        id: categories.id,
+        name: categories.name,
+      })
       .from(categories)
       .where(eq(categories.userId, auth.userId));
 
@@ -25,7 +28,12 @@ const app = new Hono()
   .get(
     "/:id",
     clerkMiddleware(),
-    zValidator("param", z.object({ id: z.string().optional() })),
+    zValidator(
+      "param",
+      z.object({
+        id: z.string().optional(),
+      })
+    ),
     async (c) => {
       const auth = getAuth(c);
       const { id } = c.req.valid("param");
@@ -49,7 +57,7 @@ const app = new Hono()
         .where(and(eq(categories.userId, userId), eq(categories.id, id)));
 
       if (!data) {
-        return c.json({ data });
+        return c.json({ error: "Not found" }, 404);
       }
 
       return c.json({ data });
@@ -58,7 +66,12 @@ const app = new Hono()
   .post(
     "/",
     clerkMiddleware(),
-    zValidator("json", insertCategorySchema.pick({ name: true })),
+    zValidator(
+      "json",
+      insertCategorySchema.pick({
+        name: true,
+      })
+    ),
     async (c) => {
       const auth = getAuth(c);
       const values = c.req.valid("json");
@@ -69,7 +82,11 @@ const app = new Hono()
 
       const [data] = await db
         .insert(categories)
-        .values({ id: createId(), userId: auth.userId, ...values })
+        .values({
+          id: createId(),
+          userId: auth.userId,
+          ...values,
+        })
         .returning();
 
       return c.json({ data });
@@ -78,7 +95,12 @@ const app = new Hono()
   .post(
     "/bulk-delete",
     clerkMiddleware(),
-    zValidator("json", z.object({ ids: z.array(z.string()) })),
+    zValidator(
+      "json",
+      z.object({
+        ids: z.array(z.string()),
+      })
+    ),
     async (c) => {
       const auth = getAuth(c);
       const values = c.req.valid("json");
@@ -95,7 +117,9 @@ const app = new Hono()
             inArray(categories.id, values.ids)
           )
         )
-        .returning({ id: categories.id });
+        .returning({
+          id: categories.id,
+        });
 
       return c.json({ data });
     }
