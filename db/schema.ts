@@ -10,6 +10,10 @@ export const accounts = pgTable("accounts", {
   userId: text("user_id").notNull(),
 });
 
+export const accountsRelations = relations(accounts, ({ many }) => ({
+  transactions: many(transactions),
+}));
+
 export const insertAccountSchema = createInsertSchema(accounts);
 
 export const categories = pgTable("categories", {
@@ -24,6 +28,7 @@ export const categoriesRelations = relations(categories, ({ many }) => ({
 }));
 
 export const insertCategorySchema = createInsertSchema(categories);
+
 export const transactions = pgTable("transactions", {
   id: text("id"),
   amount: integer("amount").notNull(),
