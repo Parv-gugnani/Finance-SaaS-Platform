@@ -1,5 +1,3 @@
-const Trnctionpage = () => {
-  return <h1>Transaation page</h1>;
-};
-
-export default Trnctionpage;
+export default function TransactionPage() {
+  const [AccountModal, confirm] = useselectAccountAndConfirmTransition();
+}
