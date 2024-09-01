@@ -44,6 +44,7 @@
     "react-currency-input-field": "^3.8.0",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.1",
+    "react-papaparse": "^4.4.0",
     "react-select": "^5.8.0",
     "react-use": "^17.5.0",
     "shadcn-ui": "^0.8.0",
