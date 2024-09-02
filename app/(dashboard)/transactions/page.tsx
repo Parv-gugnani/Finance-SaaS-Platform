@@ -1,57 +1,64 @@
+"use client";
+
+import { Loader2, Plus } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+import { DataTable } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { transactions } from "@/db/schema";
-import { useCreateTransactions } from "@/features/transactions/api/use-create-transactions";
-import { useDeleteTransaction } from "@/features/transactions/api/use-delete.transaction";
+import { transactions as transactionSchema } from "@/db/schema";
+import { useSelectAccount } from "@/features/accounts/hooks/use-select-account";
+import { useBulkCreateTransactions } from "@/features/transactions/api/use-bulk-create-transactions";
+
+import { useBulkDeleteAccounts } from "@/features/accounts/api/use-bulk-delete";
 import { useGetTransactions } from "@/features/transactions/api/use-get-transactions";
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction";
-import useSelectAccountAndConfirmTransaction from "@/features/transactions/hooks/use-select-account";
-import { Divide, Loader2, Plus } from "lucide-react";
-import { useState } from "react";
-import ImportCard from "./import-card";
-import { useBulkDeleteAccounts } from "@/features/accounts/api/use-bulk-delete";
+
+import { columns } from "./columns";
+import { ImportCard } from "./import-card";
 import { UploadButton } from "./upload-button";
 
-enum VARIANT {
+enum VARIANTS {
   LIST = "LIST",
   IMPORT = "IMPORT",
 }
 
-const INITIAL_IMPORT_VALUE = {
+const INITIAL_IMPORT_RESULTS = {
   data: [],
-  error: [],
-  meta: {},
+  errors: [],
+  meta: [],
 };
-export default function TransactionsPage() {
-  const [AccountModal, confirm] = useSelectAccountAndConfirmTransaction();
-  const [variant, setVariant] = useState<VARIANT>(VARIANT.LIST);
-  const [importResults, setImportResults] = useState(INITIAL_IMPORT_VALUE);
 
-  const onUpload = (results: typeof INITIAL_IMPORT_VALUE) => {
-    setImportResults(results);
-    setVariant(VARIANT.IMPORT);
-  };
+const TransactionsPage = () => {
+  const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
+  const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
 
-  const onCancelImport = () => {
-    setImportResults(INITIAL_IMPORT_VALUE);
-    setVariant(VARIANT.IMPORT);
-  };
-
-  const [AccountDialog, confirm] = useSelectAccountAndConfirmTransaction();
+  const [AccountDialog, confirm] = useSelectAccount();
   const newTransaction = useNewTransaction();
-  const createTransactions = useBulkDeleteAccounts();
-  const deleteTransactions = useBulkDeleteAccounts();
+  const createTransactions = useBulkCreateTransactions();
+  const deleteTransactions = useBulkDeleteTransactions();
   const transactionsQuery = useGetTransactions();
   const transactions = transactionsQuery.data || [];
 
-  let isDisabled = transactionsQuery.isLoading || deleteTransactions.isPending;
+  const onUpload = (results: typeof INITIAL_IMPORT_RESULTS) => {
+    setImportResults(results);
+    setVariant(VARIANTS.IMPORT);
+  };
 
-  const onSubmitInput = async (values: typeof transactions.$inferInsert) => {
+  const onCancelImport = () => {
+    setImportResults(INITIAL_IMPORT_RESULTS);
+    setVariant(VARIANTS.LIST);
+  };
+
+  const onSubmitImport = async (
+    values: (typeof transactionSchema.$inferInsert)[]
+  ) => {
     const accountId = await confirm();
 
     if (!accountId) {
-      return;
+      return toast.error("Please select an account to continue.");
     }
 
     const data = values.map((value) => ({
@@ -66,30 +73,36 @@ export default function TransactionsPage() {
     });
   };
 
-  if (isDisabled) {
+  const isDisabled =
+    transactionsQuery.isLoading || deleteTransactions.isPending;
+
+  if (transactionsQuery.isLoading) {
     return (
-      <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-10">
+      <div className="mx-auto -mt-6 w-full max-w-screen-2xl pb-10">
         <Card className="border-none drop-shadow-sm">
-          <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-center">
-            <Skeleton className="w-[150px] h-[30px]"></Skeleton>
-            <Skeleton className="w-[100px] h-[30px]"></Skeleton>
+          <CardHeader>
+            <Skeleton className="h-8 w-48" />
           </CardHeader>
-          <CardContent className="flex items-center justify-center">
-            <Loader2 className="text-center size-6 animate-spin" />
+
+          <CardContent>
+            <div className="flex h-[500px] w-full items-center justify-center">
+              <Loader2 className="size-6 animate-spin text-slate-300" />
+            </div>
           </CardContent>
         </Card>
       </div>
     );
   }
 
-  if (variant === VARIANT.IMPORT) {
+  if (variant === VARIANTS.IMPORT) {
     return (
       <>
-        <AccountModal />
+        <AccountDialog />
+
         <ImportCard
           data={importResults.data}
           onCancel={onCancelImport}
-          onSubmit={onSubmitInput}
+          onSubmit={onSubmitImport}
         />
       </>
     );
@@ -132,6 +145,6 @@ export default function TransactionsPage() {
       </Card>
     </div>
   );
-}
+};
 
 export default TransactionsPage;
