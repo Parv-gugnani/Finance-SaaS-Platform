@@ -11,6 +11,7 @@ import { Divide, Loader2, Plus } from "lucide-react";
 import { useState } from "react";
 import ImportCard from "./import-card";
 import { useBulkDeleteAccounts } from "@/features/accounts/api/use-bulk-delete";
+import { UploadButton } from "./upload-button";
 
 enum VARIANT {
   LIST = "LIST",
@@ -22,7 +23,7 @@ const INITIAL_IMPORT_VALUE = {
   error: [],
   meta: {},
 };
-export default function TransactionPage() {
+export default function TransactionsPage() {
   const [AccountModal, confirm] = useSelectAccountAndConfirmTransaction();
   const [variant, setVariant] = useState<VARIANT>(VARIANT.LIST);
   const [importResults, setImportResults] = useState(INITIAL_IMPORT_VALUE);
@@ -37,10 +38,10 @@ export default function TransactionPage() {
     setVariant(VARIANT.IMPORT);
   };
 
-  const [AccountDialog, confirm] = useSelectAccount();
+  const [AccountDialog, confirm] = useSelectAccountAndConfirmTransaction();
   const newTransaction = useNewTransaction();
   const createTransactions = useBulkDeleteAccounts();
-  const deleteTransactions = usebulkdelet();
+  const deleteTransactions = useBulkDeleteAccounts();
   const transactionsQuery = useGetTransactions();
   const transactions = transactionsQuery.data || [];
 
