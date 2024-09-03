@@ -17,8 +17,9 @@ import { useGetTransactions } from "@/features/transactions/api/use-get-transact
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction";
 
 import { columns } from "./columns";
-import { ImportCard } from "./import-card";
+import ImportCard from "./import-card";
 import { UploadButton } from "./upload-button";
+import { useBulkDeleteTransactions } from "@/features/transactions/api/use-bulk-delete-transactions";
 
 enum VARIANTS {
   LIST = "LIST",
