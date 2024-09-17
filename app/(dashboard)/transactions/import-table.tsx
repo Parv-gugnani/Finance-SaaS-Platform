@@ -6,43 +6,39 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
-import TableHeadSelect from "./table-head-select";
+
+import { TableHeadSelect } from "./table-head-select";
 
 type ImportTableProps = {
-  header: string[];
+  headers: string[];
   body: string[][];
   selectedColumns: Record<string, string | null>;
-  onTableHeaderSelectChange: (
-    columnIndex: number,
-    value: string | null
-  ) => void;
+  onTableHeadSelectChange: (columnIndex: number, value: string | null) => void;
 };
 
-const requiredFields = ["amount", "date", "payee"];
-
-export default function ImportTable({
-  header,
+export const ImportTable = ({
+  headers,
   body,
+  onTableHeadSelectChange,
   selectedColumns,
-  onTableHeaderSelectChange,
-}: ImportTableProps) {
+}: ImportTableProps) => {
   return (
-    <div className="rounded-md border overflow-hidden">
+    <div className="overflow-hidden rounded-md border">
       <Table>
         <TableHeader className="bg-muted">
           <TableRow>
-            {header.map((_item, index) => (
+            {headers.map((_header, index) => (
               <TableHead key={index}>
                 <TableHeadSelect
                   columnIndex={index}
                   selectedColumns={selectedColumns}
-                  onChange={onTableHeaderSelectChange}
+                  onChange={onTableHeadSelectChange}
                 />
               </TableHead>
             ))}
           </TableRow>
         </TableHeader>
+
         <TableBody>
           {body.map((row: string[], index) => (
             <TableRow key={index}>
@@ -55,4 +51,4 @@ export default function ImportTable({
       </Table>
     </div>
   );
-}
+};

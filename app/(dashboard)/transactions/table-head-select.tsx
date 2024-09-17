@@ -6,7 +6,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import React from "react";
 
 type TableHeadSelectProps = {
   columnIndex: number;
@@ -14,13 +13,13 @@ type TableHeadSelectProps = {
   onChange: (columnIndex: number, value: string | null) => void;
 };
 
-const options = ["amount", "date", "payee", "notes"];
+const options = ["amount", "payee", "date"];
 
-export default function TableHeadSelect({
+export const TableHeadSelect = ({
   columnIndex,
   selectedColumns,
   onChange,
-}: TableHeadSelectProps) {
+}: TableHeadSelectProps) => {
   const currentSelection = selectedColumns[`column_${columnIndex}`];
 
   return (
@@ -30,16 +29,27 @@ export default function TableHeadSelect({
     >
       <SelectTrigger
         className={cn(
-          "focus:ring-offset-0 focus:ring-transparent outline-none border-none bg-transparent capitalize",
+          "border-none bg-transparent capitalize outline-none focus:ring-transparent focus:ring-offset-0",
           currentSelection && "text-blue-500"
         )}
       >
-        <SelectValue placeholder={"Skip"} />
+        <SelectValue placeholder="Skip" />
       </SelectTrigger>
+
       <SelectContent>
+        <SelectItem value="skip">Skip</SelectItem>
         {options.map((option, index) => {
+          const disabled =
+            Object.values(selectedColumns).includes(option) &&
+            selectedColumns[`column_${columnIndex}`] !== option;
+
           return (
-            <SelectItem value={option} key={index} className="capitalize">
+            <SelectItem
+              key={index}
+              value={option}
+              disabled={disabled}
+              className="capitalize"
+            >
               {option}
             </SelectItem>
           );
@@ -47,4 +57,4 @@ export default function TableHeadSelect({
       </SelectContent>
     </Select>
   );
-}
+};

@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { useState } from "react";
-import ImportTable from "./import-table";
-import { convertAmountToMiliUnits } from "@/lib/utils";
+import { ImportTable } from "./import-table";
+import { convertAmountToMilliunits } from "@/lib/utils";
 import { format, parse } from "date-fns";
 
 const inputDateFormat = "yyyy-MM-dd HH:mm:ss";
@@ -91,7 +91,7 @@ export default function ImportCard({
 
     const formattedData = arrayOfData.map((item) => ({
       ...item,
-      amount: convertAmountToMiliUnits(parseFloat(item.amount)),
+      amount: convertAmountToMilliunits(parseFloat(item.amount)),
       date: format(
         parse(item.date, inputDateFormat, new Date()),
         outputDateFormat
@@ -124,10 +124,10 @@ export default function ImportCard({
         </CardHeader>
         <CardContent>
           <ImportTable
-            header={header}
+            headers={header}
             body={body}
             selectedColumns={selectedColumns}
-            onTableHeaderSelectChange={onTableHeaderSelectChange}
+            onTableHeadSelectChange={onTableHeaderSelectChange}
           />
         </CardContent>
       </Card>
