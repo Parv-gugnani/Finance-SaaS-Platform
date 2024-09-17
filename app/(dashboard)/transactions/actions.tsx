@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDeleteTransaction } from "@/features/transactions/api/use-delete.transaction";
 import { useConfirm } from "@/hooks/use-confirm";
-import { UseOpenTransaction } from "@/features/transactions/hooks/use-open-transaction";
+// import { UseOpenTransaction } from "@/features/transactions/hooks/use-open-transaction";
+import { useOpenTransaction } from "@/features/transactions/hooks/use-open-transaction";
 
 type ActionsProps = {
   id: string;
@@ -19,7 +20,7 @@ type ActionsProps = {
 
 export const Actions = ({ id }: ActionsProps) => {
   const deleteMutation = useDeleteTransaction(id);
-  const { onOpen } = UseOpenTransaction();
+  const { onOpen } = useOpenTransaction();
 
   const [ConfirmDialog, confirm] = useConfirm(
     "Are you sure?",
