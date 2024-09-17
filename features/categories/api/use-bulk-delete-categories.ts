@@ -3,6 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/hono";
 import { toast } from "sonner";
 
+import { useDeleteCategory } from "./use-delete-category";
+
 type ResponseType = InferResponseType<
   (typeof client.api.categories)["bulk-delete"]["$post"]
 >;

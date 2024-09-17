@@ -56,7 +56,7 @@
     "recharts": "^2.12.7",
     "shadcn-ui": "^0.8.0",
     "sonner": "^1.5.0",
-    "tailwind-merge": "^2.3.0",
+    "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "tooltip": "^1.6.1",
     "tslib": "^2.6.3",

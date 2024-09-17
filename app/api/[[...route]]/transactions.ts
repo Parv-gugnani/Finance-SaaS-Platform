@@ -12,7 +12,7 @@ import { zValidator } from "@hono/zod-validator";
 import { createId } from "@paralleldrive/cuid2";
 import { z } from "zod";
 import { parse, subDays } from "date-fns";
-import { convertAmountFromMiliUnits } from "@/lib/utils";
+import { convertAmountFromMilliunits } from "@/lib/utils";
 
 const app = new Hono()
   .get(
@@ -76,7 +76,7 @@ const app = new Hono()
       return c.json({
         data: data.map((d) => ({
           ...d,
-          amount: convertAmountFromMiliUnits(d.amount),
+          amount: convertAmountFromMilliunits(d.amount),
         })),
       });
     }
@@ -138,7 +138,7 @@ const app = new Hono()
       return c.json({
         data: {
           ...data,
-          amount: convertAmountFromMiliUnits(data.amount),
+          amount: convertAmountFromMilliunits(data.amount),
         },
       });
     }
