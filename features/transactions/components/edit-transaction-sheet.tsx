@@ -9,16 +9,18 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { insertTransactionSchema } from "@/db/schema";
+// import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 import { useCreateAccount } from "@/features/accounts/api/use-create-accounts";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
 import { useCreateCategory } from "@/features/categories/api/use-create-category";
 import { useGetCategories } from "@/features/categories/api/use-get-categories";
+// import { useDeleteTransaction } from "@/features/transactions/api/use-delete-transaction";
 import { useDeleteTransaction } from "../api/use-delete.transaction";
 import { useEditTransaction } from "@/features/transactions/api/use-edit-transaction";
 import { useGetTransaction } from "@/features/transactions/api/use-get-transaction";
-import { useOpenAccount } from "@/features/accounts/hooks/use-open-account";
-import { useOpenTransaction } from "../hooks/use-open-transaction";
+import { useOpenTransaction } from "@/features/transactions/hooks/use-open-transaction";
 import { useConfirm } from "@/hooks/use-confirm";
+
 import { TransactionForm } from "./transaction-form";
 
 const formSchema = insertTransactionSchema.omit({ id: true });
@@ -94,15 +96,30 @@ export const EditTransactionSheet = () => {
         notes: "",
       };
 
-  const onDelete = async () => {
+  // const onDelete = async () => {
+  //   const ok = await confirm();
+
+  //   if (ok) {
+  //     deleteMutation.mutate(undefined, {
+  //       onSuccess: () => {
+  //         onClose();
+  //       },
+  //     });
+  //   }
+  // };
+
+  const handleDelete = async () => {
     const ok = await confirm();
 
     if (ok) {
-      deleteMutation.mutate(undefined, {
-        onSuccess: () => {
-          onClose();
-        },
-      });
+      deleteMutation.mutate(
+        { id },
+        {
+          onSuccess: () => {
+            onClose();
+          },
+        }
+      );
     }
   };
 
@@ -131,7 +148,7 @@ export const EditTransactionSheet = () => {
               onCreateCategory={onCreateCategory}
               accountOptions={accountOptions}
               onCreateAccount={onCreateAccount}
-              onDelete={onDelete}
+              onDelete={handleDelete}
             />
           )}
         </SheetContent>

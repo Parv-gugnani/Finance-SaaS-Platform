@@ -1,5 +1,6 @@
 import { useOpenCategory } from "@/features/categories/hooks/use-open-category";
-import { UseOpenTransaction } from "@/features/transactions/hooks/use-open-transaction";
+// import { UseOpenTransaction } from "@/features/transactions/hooks/use-open-transaction";
+import { useOpenTransaction } from "@/features/transactions/hooks/use-open-transaction";
 import { cn } from "@/lib/utils";
 import { TriangleAlert } from "lucide-react";
 
@@ -14,7 +15,7 @@ export const CategoryColumn = ({
   categoryId,
 }: CategoryColumnProps) => {
   const { onOpen: onOpenCategory } = useOpenCategory();
-  const { onOpen: onOpenTransaction } = UseOpenTransaction();
+  const { onOpen: onOpenTransaction } = useOpenTransaction();
 
   const onClick = () => {
     if (categoryId) onOpenCategory(categoryId);
