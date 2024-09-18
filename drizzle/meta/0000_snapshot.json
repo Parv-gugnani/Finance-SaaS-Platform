@@ -1,5 +1,5 @@
 {
-  "id": "8b4f0b44-3e41-4ce6-a5a6-389a839bf524",
+  "id": "ab65c1e9-5c56-4807-ab71-def2a606f94d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -13,12 +13,6 @@
           "type": "text",
           "primaryKey": true,
           "notNull": true
-        },
-        "plaid_id": {
-          "name": "plaid_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         },
         "name": {
           "name": "name",
@@ -48,12 +42,6 @@
           "primaryKey": true,
           "notNull": true
         },
-        "plaid_id": {
-          "name": "plaid_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "name": {
           "name": "name",
           "type": "text",
@@ -79,8 +67,8 @@
         "id": {
           "name": "id",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "primaryKey": true,
+          "notNull": true
         },
         "amount": {
           "name": "amount",
