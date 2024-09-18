@@ -71,21 +71,15 @@ export function formatDateRange(period?: Period) {
   const defaultTo = new Date();
   const defaultFrom = subDays(defaultTo, 30);
 
-  if (!period?.from) {
-    return `${format(defaultFrom, "LLL dd")} - ${format(
-      defaultTo,
-      "LLL dd, y"
-    )}`;
-  }
+  // Helper to ensure the date is a valid Date object
+  const ensureDate = (date: string | Date | undefined): Date => {
+    return typeof date === "string" ? new Date(date) : date ?? defaultTo;
+  };
 
-  if (period?.to) {
-    return `${format(period.from, "LLL dd")} - ${format(
-      period.to,
-      "LLL dd, y"
-    )}`;
-  }
+  const from = ensureDate(period?.from || defaultFrom);
+  const to = ensureDate(period?.to || defaultTo);
 
-  return format(period.from, "LLL dd, y");
+  return `${format(from, "LLL dd")} - ${format(to, "LLL dd, y")}`;
 }
 
 export function formatPercentage(
