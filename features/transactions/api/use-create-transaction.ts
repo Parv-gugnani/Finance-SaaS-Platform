@@ -1,7 +1,8 @@
-import { InferRequestType, InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { client } from "@/lib/hono";
+import { InferRequestType, InferResponseType } from "hono";
 import { toast } from "sonner";
+
+import { client } from "@/lib/hono";
 
 type ResponseType = InferResponseType<typeof client.api.transactions.$post>;
 type RequestType = InferRequestType<
@@ -14,14 +15,16 @@ export const useCreateTransaction = () => {
   const mutation = useMutation<ResponseType, Error, RequestType>({
     mutationFn: async (json) => {
       const response = await client.api.transactions.$post({ json });
+
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Transaction created successfully");
+      toast.success("Transaction created.");
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["summary"] });
     },
     onError: () => {
-      toast.error("Could not create the transaction");
+      toast.error("Failed to create transaction.");
     },
   });
 

@@ -1,17 +1,17 @@
-import { client } from "@/lib/hono";
-import { convertAmountFromMilliunits } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
+import { client } from "@/lib/hono";
+import { convertAmountFromMilliunits } from "@/lib/utils";
+
 export const useGetTransactions = () => {
-  const params = useSearchParams();
-  const from = params.get("from") || "";
-  const to = params.get("to") || "";
-  const accountId = params.get("accountId") || "";
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from") || "";
+  const to = searchParams.get("to") || "";
+  const accountId = searchParams.get("accountId") || "";
 
   const query = useQuery({
-    // TODO : Check when unique data need or not
-    queryKey: ["transactions"],
+    queryKey: ["transactions", { from, to, accountId }],
     queryFn: async () => {
       const response = await client.api.transactions.$get({
         query: {
@@ -21,16 +21,16 @@ export const useGetTransactions = () => {
         },
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch transactions");
-      }
+      if (!response.ok) throw new Error("Failed to fetch transactions.");
 
       const { data } = await response.json();
+
       return data.map((transaction) => ({
         ...transaction,
         amount: convertAmountFromMilliunits(transaction.amount),
       }));
     },
   });
+
   return query;
 };
