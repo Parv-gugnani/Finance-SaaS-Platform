@@ -9,16 +9,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useDeleteTransaction } from "@/features/transactions/api/use-delete.transaction";
-import { useConfirm } from "@/hooks/use-confirm";
+import { useDeleteTransaction } from "@/features/transactions/api/use-delete-transaction";
 import { useOpenTransaction } from "@/features/transactions/hooks/use-open-transaction";
+import { useConfirm } from "@/hooks/use-confirm";
 
 type ActionsProps = {
   id: string;
 };
 
 export const Actions = ({ id }: ActionsProps) => {
-  const deleteMutation = useDeleteTransaction();
+  const deleteMutation = useDeleteTransaction(id);
   const { onOpen } = useOpenTransaction();
 
   const [ConfirmDialog, confirm] = useConfirm(
@@ -30,17 +30,7 @@ export const Actions = ({ id }: ActionsProps) => {
     const ok = await confirm();
 
     if (ok) {
-      deleteMutation.mutate(
-        { id }, // Pass the id to the mutate function
-        {
-          onSuccess: () => {
-            console.log("Transaction deleted successfully");
-          },
-          onError: (error) => {
-            console.error("Error deleting transaction:", error);
-          },
-        }
-      );
+      deleteMutation.mutate();
     }
   };
 

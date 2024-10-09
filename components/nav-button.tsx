@@ -1,23 +1,24 @@
-import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
 import Link from "next/link";
 
-type Props = {
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+type NavButtonProps = {
   href: string;
   label: string;
-  isActive?: boolean;
+  isActive: boolean;
 };
 
-export const NavButton = ({ href, label, isActive }: Props) => {
+export const NavButton = ({ href, label, isActive }: NavButtonProps) => {
   return (
     <Button
-      asChild
       size="sm"
       variant="outline"
       className={cn(
-        "w-full lg:w-auto justify-between font-normal hover:bg-white/20 hover:text-white border-none focus-visible:ring-offset-0 focus-visible:ring-transparent outline-none text-white focus:bg-white/30 transition",
+        "w-full justify-between border-none font-normal text-white outline-offset-0 transition hover:bg-white/20 hover:text-white focus:bg-white/30 focus-visible:ring-transparent focus-visible:ring-offset-0 lg:w-auto",
         isActive ? "bg-white/10 text-white" : "bg-transparent"
       )}
+      asChild
     >
       <Link href={href}>{label}</Link>
     </Button>

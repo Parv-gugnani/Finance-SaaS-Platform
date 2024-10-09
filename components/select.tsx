@@ -1,25 +1,26 @@
 "use client";
-import React, { useMemo } from "react";
-import { SingleValue } from "react-select";
-import CreateableSelect from "react-select/creatable";
+
+import { useMemo } from "react";
+import type { SingleValue } from "react-select";
+import CreatableSelect from "react-select/creatable";
 
 type SelectProps = {
   onChange: (value?: string) => void;
-  onCreate: (value: string) => void;
+  onCreate?: (value: string) => void;
   options?: { label: string; value: string }[];
   value?: string | null | undefined;
   disabled?: boolean;
   placeholder?: string;
 };
 
-export default function Select({
+export const Select = ({
+  value,
   onChange,
   onCreate,
   options = [],
-  value,
   disabled,
   placeholder,
-}: SelectProps) {
+}: SelectProps) => {
   const onSelect = (option: SingleValue<{ label: string; value: string }>) => {
     onChange(option?.value);
   };
@@ -29,9 +30,9 @@ export default function Select({
   }, [options, value]);
 
   return (
-    <CreateableSelect
+    <CreatableSelect
       placeholder={placeholder}
-      className="text-sm h-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 "
+      className="h-10 text-sm"
       styles={{
         control: (base) => ({
           ...base,
@@ -48,4 +49,4 @@ export default function Select({
       isDisabled={disabled}
     />
   );
-}
+};

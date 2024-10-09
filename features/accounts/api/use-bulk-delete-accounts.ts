@@ -1,5 +1,5 @@
-import { InferRequestType, InferResponseType } from "hono";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { InferRequestType, InferResponseType } from "hono";
 import { toast } from "sonner";
 
 import { client } from "@/lib/hono";
@@ -22,13 +22,14 @@ export const useBulkDeleteAccounts = () => {
       return await response.json();
     },
     onSuccess: () => {
-      toast.success("Accounts Deleted");
+      toast.success("Account(s) deleted.");
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["summary"] });
     },
     onError: () => {
-      //
-      toast.error("Failed to Delete Account");
+      toast.error("Failed to delete account(s).");
     },
   });
+
   return mutation;
 };

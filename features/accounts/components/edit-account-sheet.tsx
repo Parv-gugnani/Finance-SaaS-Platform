@@ -1,3 +1,6 @@
+import { Loader2 } from "lucide-react";
+import { z } from "zod";
+
 import {
   Sheet,
   SheetContent,
@@ -5,28 +8,27 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { AccountForm } from "./account-form";
 import { insertAccountSchema } from "@/db/schema";
-import { z } from "zod";
-import { useOpenAccount } from "../hooks/use-open-account";
-import { useGetAccount } from "../api/use-get-account";
-import { Loader2 } from "lucide-react";
-import { useEditAccount } from "../api/use-edit-account";
-import { useDeleteAccount } from "../api/use-delete-account";
+import { useDeleteAccount } from "@/features/accounts/api/use-delete-account";
+import { useEditAccount } from "@/features/accounts/api/use-edit-account";
+import { useGetAccount } from "@/features/accounts/api/use-get-account";
+import { useOpenAccount } from "@/features/accounts/hooks/use-open-account";
 import { useConfirm } from "@/hooks/use-confirm";
+
+import { AccountForm } from "./account-form";
 
 const formSchema = insertAccountSchema.pick({
   name: true,
 });
 
-type FormValues = z.input<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>;
 
-const EditAccountSheet = () => {
+export const EditAccountSheet = () => {
   const { isOpen, onClose, id } = useOpenAccount();
 
   const [ConfirmDialog, confirm] = useConfirm(
-    "Are you sure you want to delete this account?",
-    "You are about to delete this accaunt."
+    "Are you sure?",
+    "You are about to delete this account."
   );
 
   const accountQuery = useGetAccount(id);
@@ -45,6 +47,14 @@ const EditAccountSheet = () => {
     });
   };
 
+  const defaultValues = accountQuery.data
+    ? {
+        name: accountQuery.data.name,
+      }
+    : {
+        name: "",
+      };
+
   const onDelete = async () => {
     const ok = await confirm();
 
@@ -57,36 +67,27 @@ const EditAccountSheet = () => {
     }
   };
 
-  const defaultValues = accountQuery.data
-    ? {
-        name: accountQuery.data.name,
-      }
-    : {
-        name: "",
-      };
-
   return (
     <>
       <ConfirmDialog />
-      <Sheet open={isOpen} onOpenChange={onClose}>
+      <Sheet open={isOpen || isPending} onOpenChange={onClose}>
         <SheetContent className="space-y-4">
           <SheetHeader>
             <SheetTitle>Edit Account</SheetTitle>
+
             <SheetDescription>Edit an existing account.</SheetDescription>
           </SheetHeader>
+
           {isLoading ? (
-            <div
-              className="absolute inset-0 flex items-center 
-          justify-center"
-            >
-              <Loader2 className="size-4 text-muted-foreground animate-spin" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Loader2 className="size-4 animate-spin text-muted-foreground" />
             </div>
           ) : (
             <AccountForm
               id={id}
+              defaultValues={defaultValues}
               onSubmit={onSubmit}
               disabled={isPending}
-              defaultValues={defaultValues}
               onDelete={onDelete}
             />
           )}
@@ -95,5 +96,3 @@ const EditAccountSheet = () => {
     </>
   );
 };
-
-export default EditAccountSheet;

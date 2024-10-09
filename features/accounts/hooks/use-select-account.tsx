@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-import Select from "@/components/select";
+import { Select } from "@/components/select";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,12 +10,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
-import { useCreateAccount } from "../api/use-create-accounts";
 
 export const useSelectAccount = (): [
   () => JSX.Element,
-  () => Promise<unknown>
+  () => Promise<unknown>,
 ] => {
   const accountQuery = useGetAccounts();
   const accountMutation = useCreateAccount();

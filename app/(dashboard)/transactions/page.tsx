@@ -12,8 +12,10 @@ import { transactions as transactionSchema } from "@/db/schema";
 import { useSelectAccount } from "@/features/accounts/hooks/use-select-account";
 import { useBulkCreateTransactions } from "@/features/transactions/api/use-bulk-create-transactions";
 
-import { useBulkDeleteAccounts } from "@/features/accounts/api/use-bulk-delete";
+// import { useBulkDeleteAccounts } from "@/features/accounts/api/use-bulk-delete";
+import { useBulkDeleteAccounts } from "@/features/accounts/api/use-bulk-delete-accounts";
 import { useGetTransactions } from "@/features/transactions/api/use-get-transactions";
+// import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction";
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction";
 
 import { columns } from "./columns";
@@ -122,6 +124,10 @@ const TransactionsPage = () => {
               size="sm"
               onClick={newTransaction.onOpen}
               className="w-full lg:w-auto"
+              // onClick={() => {
+              //   console.log("Button clicked");
+              //   newTransaction.onOpen();
+              // }}
             >
               <Plus className="mr-2 size-4" /> Add new
             </Button>
