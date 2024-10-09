@@ -1,9 +1,10 @@
 import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogDescription,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -18,13 +19,11 @@ export const useConfirm = (
   } | null>(null);
 
   const confirm = () =>
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       setPromise({ resolve });
     });
 
-  const handleClose = () => {
-    setPromise(null);
-  };
+  const handleClose = () => setPromise(null);
 
   const handleConfirm = () => {
     promise?.resolve(true);
@@ -37,17 +36,18 @@ export const useConfirm = (
   };
 
   const ConfirmationDialog = () => (
-    <Dialog open={promise !== null}>
+    <Dialog open={promise !== null} onOpenChange={handleCancel}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{message}</DialogDescription>
         </DialogHeader>
+
         <DialogFooter className="pt-2">
-          <Button onClick={handleCancel}>Cancel</Button>
-          <Button onClick={handleConfirm} variant="outline">
-            Confirm
+          <Button onClick={handleCancel} variant="outline">
+            Cancel
           </Button>
+          <Button onClick={handleConfirm}>Confirm</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

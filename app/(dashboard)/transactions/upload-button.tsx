@@ -4,7 +4,7 @@ import { useCSVReader } from "react-papaparse";
 import { Button } from "@/components/ui/button";
 
 type UploadButtonProps = {
-  onUpload: (result: any) => void;
+  onUpload: (results: any) => void;
 };
 
 export const UploadButton = ({ onUpload }: UploadButtonProps) => {

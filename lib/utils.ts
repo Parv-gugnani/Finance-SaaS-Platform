@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { eachDayOfInterval, format, isSameDay, subDays } from "date-fns";
+import { parseISO, isValid } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -67,20 +68,54 @@ type Period = {
   to: string | Date | undefined;
 };
 
+function toValidDate(date: string | Date | undefined, fallback: Date): Date {
+  if (typeof date === "string") {
+    const parsedDate = parseISO(date);
+    return isValid(parsedDate) ? parsedDate : fallback;
+  }
+  return date instanceof Date && isValid(date) ? date : fallback;
+}
+
 export function formatDateRange(period?: Period) {
   const defaultTo = new Date();
   const defaultFrom = subDays(defaultTo, 30);
 
-  // Helper to ensure the date is a valid Date object
-  const ensureDate = (date: string | Date | undefined): Date => {
-    return typeof date === "string" ? new Date(date) : date ?? defaultTo;
-  };
+  const fromDate = toValidDate(period?.from, defaultFrom);
+  const toDate = toValidDate(period?.to, defaultTo);
 
-  const from = ensureDate(period?.from || defaultFrom);
-  const to = ensureDate(period?.to || defaultTo);
+  if (period?.from && period?.to) {
+    return `${format(fromDate, "LLL dd")} - ${format(toDate, "LLL dd, y")}`;
+  }
 
-  return `${format(from, "LLL dd")} - ${format(to, "LLL dd, y")}`;
+  if (period?.from) {
+    return format(fromDate, "LLL dd, y");
+  }
+  return `${format(defaultFrom, "LLL dd")} - ${format(defaultTo, "LLL dd, y")}`;
 }
+/*
+
+export function formatDateRange(period?: Period) {
+  const defaultTo = new Date();
+  const defaultFrom = subDays(defaultTo, 30);
+
+  if (!period?.from) {
+    return `${format(defaultFrom, "LLL dd")} - ${format(
+      defaultTo,
+      "LLL dd, y"
+    )}`;
+  }
+
+  if (period?.to) {
+    return `${format(period.from, "LLL dd")} - ${format(
+      period.to,
+      "LLL dd, y"
+    )}`;
+  }
+
+  return format(period.from, "LLL dd, y");
+}
+
+*/
 
 export function formatPercentage(
   value: number,

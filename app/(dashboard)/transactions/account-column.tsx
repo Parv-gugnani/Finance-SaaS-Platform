@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { useOpenAccount } from "@/features/accounts/hooks/use-open-account";
 
 type AccountColumnProps = {
@@ -12,11 +11,11 @@ export const AccountColumn = ({ account, accountId }: AccountColumnProps) => {
   const onClick = () => onOpenAccount(accountId);
 
   return (
-    <Button
+    <button
       onClick={onClick}
       className="flex cursor-pointer items-center hover:underline"
     >
       {account}
-    </Button>
+    </button>
   );
 };

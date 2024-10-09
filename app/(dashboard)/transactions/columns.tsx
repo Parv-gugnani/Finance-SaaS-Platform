@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns"; // Import isValid for date validation
 import { InferResponseType } from "hono";
 import { ArrowUpDown } from "lucide-react";
 
@@ -57,9 +57,14 @@ export const columns: ColumnDef<ResponseType>[] = [
       );
     },
     cell: ({ row }) => {
-      const date = row.getValue("date") as Date;
+      const dateValue = new Date(row.getValue("date")); // Parse the date
 
-      return <span>{format(date, "dd MMMM, yyyy")}</span>;
+      // Check if the date is valid
+      if (!isValid(dateValue)) {
+        return <span>Invalid date</span>; // Handle invalid date
+      }
+
+      return <span>{format(dateValue, "dd MMMM, yyyy")}</span>; // Format and return the date
     },
   },
   {
