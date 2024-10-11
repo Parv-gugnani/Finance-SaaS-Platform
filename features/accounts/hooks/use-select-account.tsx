@@ -1,3 +1,4 @@
+"use client";
 import { useRef, useState } from "react";
 
 import { Select } from "@/components/select";
@@ -15,7 +16,7 @@ import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
 
 export const useSelectAccount = (): [
   () => JSX.Element,
-  () => Promise<unknown>,
+  () => Promise<unknown>
 ] => {
   const accountQuery = useGetAccounts();
   const accountMutation = useCreateAccount();

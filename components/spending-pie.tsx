@@ -1,3 +1,4 @@
+"use client";
 import { FileSearch, Loader2, PieChart, Radar, Target } from "lucide-react";
 import { useState } from "react";
 
