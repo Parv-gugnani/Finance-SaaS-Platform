@@ -39,7 +39,15 @@ export const AreaVariant = ({ data }: AreaVariantProps) => {
           axisLine={false}
           tickLine={false}
           dataKey="date"
-          tickFormatter={(value) => format(value, "dd MMM")}
+          tickFormatter={(value) => {
+            const dateValue = new Date(value); // Convert to Date object
+            if (!isNaN(dateValue.getTime())) {
+              // Check for valid date
+              return format(dateValue, "dd MMM");
+            }
+            console.error("Invalid date value:", value);
+            return ""; // Return empty or a fallback string
+          }}
           style={{
             fontSize: "12px",
           }}
