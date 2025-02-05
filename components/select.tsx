@@ -13,6 +13,7 @@ type SelectProps = {
   placeholder?: string;
 };
 
+// this is samrth
 export const Select = ({
   value,
   onChange,

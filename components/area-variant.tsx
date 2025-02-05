@@ -18,6 +18,8 @@ type AreaVariantProps = {
   }[];
 };
 
+// this is samarth wow
+
 export const AreaVariant = ({ data }: AreaVariantProps) => {
   return (
     <ResponsiveContainer width="100%" height={350}>
